@@ -1,0 +1,35 @@
+{
+  "name": "library_backend",
+  "version": "1.0.0",
+  "description": "REST backend for a library application.",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "cross-env-shell NODE_ENV=DEVELOPMENT nodemon --exec npx babel-node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "RndmCodeGyu20",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.21.3",
+    "@babel/node": "^7.20.7",
+    "@babel/preset-env": "^7.20.2",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.37.0",
+    "eslint-config-google": "^0.14.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "helmet": "^6.0.1",
+    "http-errors": "^2.0.0",
+    "http-status-codes": "^2.2.0",
+    "joi": "^17.9.1",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.0.3",
+    "timekeeper": "^2.2.0",
+    "util": "^0.12.5"
+  }
+}
