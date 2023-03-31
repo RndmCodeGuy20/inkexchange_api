@@ -1,11 +1,12 @@
 import {app} from './app';
-import {envConfig} from '#configs/index';
+import {envConfig} from './config/index';
+import {getConnection} from '#helpers/database';
 
 let server;
-const init = () => {
-  // await getConnection();
+const init = async () => {
+  await getConnection();
   server = app.listen(envConfig.APP_PORT, () => {
-    console.log(`Listening on  http://localhost:${envConfig.APP_PORT}`);
+    console.log(`Listening on ${envConfig.HOSTNAME} http://localhost:${envConfig.APP_PORT}`);
   });
 };
 
