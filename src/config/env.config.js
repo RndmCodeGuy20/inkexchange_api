@@ -9,11 +9,20 @@ env.config({
 const {
   NODE_ENV,
   APP_PORT,
+  DB_HOST,
+  DB_PORT,
+  DB_USER,
+  DB_PASSWORD,
+  DB_NAME,
 } = process.env;
 
 export const envConfig = {
   ENV: NODE_ENV,
   HOSTNAME: hostname(),
-
   APP_PORT: parseFloat(APP_PORT),
+  DB_HOST: DB_HOST,
+  DB_PORT: DB_PORT,
+  DB_USER: DB_USER,
+  DB_PASSWORD: DB_PASSWORD,
+  DB_NAME: DB_NAME,
 };

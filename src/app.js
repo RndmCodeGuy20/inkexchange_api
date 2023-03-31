@@ -2,6 +2,8 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import helmet from 'helmet';
+import {jsend} from '#utils/response';
+import {envConfig} from '#configs/env.config';
 
 const corsOptions = {
   origin: '*',
@@ -15,12 +17,16 @@ const app = express();
 app.use(helmet());
 app.use(cors(corsOptions));
 app.use(express.json({limit: '20MB'}));
-// app.use(jsend());
+app.use(jsend());
 app.use(express.urlencoded({extended: false, limit: '50MB'}));
 app.use(cookieParser());
 
 app.use('/', (req, res) => {
-  res.json({info: 'rndmcodeguy : library api server. Please visit health route for more information.'});
+  res.json({
+    status: 'active',
+    info: 'library backend api server. Please visit health route for more information.',
+    hostname: envConfig.HOSTNAME,
+  });
 });
 
 export {app};
