@@ -1,1 +1,1 @@
-export * from './route.middleware';
+export * from "./route.middleware";
