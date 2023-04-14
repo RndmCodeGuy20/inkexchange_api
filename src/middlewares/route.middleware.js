@@ -1,5 +1,5 @@
-import {StatusCodes, ReasonPhrases} from 'http-status-codes';
-import {ERROR_CODES} from '#constants/index';
+import { StatusCodes, ReasonPhrases } from 'http-status-codes';
+import { ERROR_CODES } from '#constants/index';
 
 /**
  * Error Middleware for NotAllowed

@@ -4,6 +4,6 @@ import { controller as api } from './controller';
 
 const router = new Router();
 
-router.route('/something').all(methodNotAllowed).get(api.getSomething);
+router.route('/something').get(api.getSomething);
 
-export default router;
+module.exports = router;

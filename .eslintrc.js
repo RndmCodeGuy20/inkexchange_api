@@ -23,5 +23,7 @@ module.exports = {
       'code': 120,
     },
     ],
+    'object-curly-spacing': ['error', 'always'],
+    'no-tabs': ['error', { 'allowIndentationTabs': true }],
   },
 };

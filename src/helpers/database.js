@@ -1,6 +1,6 @@
 const mysql = require('mysql2');
 const util = require('util');
-import {envConfig} from '../config/index';
+import { envConfig } from '../config/index';
 
 const pool = mysql.createPool({
   host: envConfig.DB_HOST,
@@ -35,7 +35,7 @@ export const getConnection = async () => {
         const rollback = util.promisify(connection.rollback).bind(connection);
         const query = util.promisify(connection.query).bind(connection);
         const commit = util.promisify(connection.commit).bind(connection);
-        resolve({rollback, query, commit});
+        resolve({ rollback, query, commit });
       }
     });
   });

@@ -1,4 +1,4 @@
-import {hostname} from 'os';
+import { hostname } from 'os';
 
 
 const env = require('dotenv');
