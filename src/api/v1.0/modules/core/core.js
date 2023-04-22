@@ -1,22 +1,22 @@
-import { mysqlQuery } from '#helpers/database';
+import { mysqlQuery } from "#helpers/database";
 
 /**
  * class CoreServices
  */
 class CoreServices {
-  /**
+	/**
 	 *
 	 * @return {Promise<void>}
 	 */
-  async getSomething() {
-    try {
-      const query = `SELECT *
+	async getSomething() {
+		try {
+			const query = `SELECT *
 										 FROM data_devices`;
-      return await mysqlQuery({ sql: query });
-    } catch (error) {
-      throw error;
-    }
-  }
+			return await mysqlQuery({ sql: query });
+		} catch (error) {
+			throw error;
+		}
+	}
 }
 
 export const coreServices = new CoreServices();
