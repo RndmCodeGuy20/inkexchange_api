@@ -1,3 +1,7 @@
+/**
+ * @description - jsend response, a simple response format for all response types.
+ * @return {(function(*, *, *): void)|*}
+ */
 export const jsresponse = () => {
   return (req, res, next) => {
     res.jsend = {
