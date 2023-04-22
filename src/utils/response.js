@@ -1,4 +1,4 @@
-export const jsend = () => {
+export const jsresponse = () => {
   return (req, res, next) => {
     res.jsend = {
       success: (data, message = { info: 'Successful' }, statusCode = 200) => {

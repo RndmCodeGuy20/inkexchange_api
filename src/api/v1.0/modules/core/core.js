@@ -1,5 +1,4 @@
 import { mysqlQuery } from '#helpers/database';
-import { logger } from '#helpers/index';
 
 /**
  * class CoreServices
@@ -13,9 +12,7 @@ class CoreServices {
     try {
       const query = `SELECT *
 										 FROM data_devices`;
-      const response = await mysqlQuery({ sql: query });
-
-      return response;
+      return await mysqlQuery({ sql: query });
     } catch (error) {
       throw error;
     }

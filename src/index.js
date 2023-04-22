@@ -1,6 +1,7 @@
 import { app } from './app';
 import { envConfig } from './config/index';
 import { getConnection } from '#helpers/database';
+import { logger } from '#helpers/logger';
 
 const init = async () => {
   await getConnection();
@@ -10,5 +11,5 @@ const init = async () => {
 };
 
 init().then(() => {
-  console.log(`server on!`);
+  logger.debug('Server started successfully');
 });
