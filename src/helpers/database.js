@@ -73,7 +73,7 @@ export const getConnection = async () => {
   //   });
   // });
 
-  return dbPromise;
+  return await dbPromise;
 };
 
 /**
