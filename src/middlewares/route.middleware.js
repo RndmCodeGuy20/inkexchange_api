@@ -18,6 +18,9 @@ class MethodNotAllowedError extends Error {
   }
 }
 
+/**
+ * Error Middleware for RouteNotFound
+ */
 export const methodNotAllowed = () => {
   try {
     throw new MethodNotAllowedError(
@@ -51,6 +54,9 @@ class RouteNotFoundError extends Error {
   }
 }
 
+/**
+ * Error Middleware for RouteNotFound
+ */
 export const routeNotFound = () => {
   try {
     throw new RouteNotFoundError(

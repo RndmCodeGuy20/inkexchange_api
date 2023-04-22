@@ -1,6 +1,13 @@
 import { pkgConfig } from '#configs/package.config';
 import { getConnection } from '#helpers/database';
 
+/**
+ * Get health
+ * @param {{}} req
+ * @param {{}} res
+ * @param {{}} next
+ * @return {Promise<void>}
+ */
 export const getHealth = async (req, res, next) => {
   try {
     await getConnection();
