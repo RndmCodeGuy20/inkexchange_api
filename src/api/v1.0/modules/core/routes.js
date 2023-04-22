@@ -1,8 +1,8 @@
-import { Router } from 'express';
-import { controller as api } from './controller';
+import { Router } from "express";
+import { controller as api } from "./controller";
 
 const router = new Router();
 
-router.route('/something').get(api.getSomething);
+router.route("/something").get(api.getSomething);
 
 module.exports = router;
