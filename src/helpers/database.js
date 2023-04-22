@@ -1,3 +1,5 @@
+import { logger } from '#helpers/logger';
+
 const mysql = require('mysql2');
 const util = require('util');
 import { envConfig } from '../config/index';
@@ -12,6 +14,10 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
+/**
+ * Get connection from pool
+ * @return {Promise<unknown>}
+ */
 export const getConnection = async () => {
   return new Promise((resolve, reject) => {
     pool.getConnection((err, connection) => {
@@ -29,7 +35,7 @@ export const getConnection = async () => {
           reject(new Error('Database connection was refused.'));
         }
       }
-      console.log(`connected to database : ${envConfig.DB_NAME}!`);
+      logger.info(`connected to database : ${envConfig.DB_NAME}!`);
 
       if (connection) {
         const rollback = util.promisify(connection.rollback).bind(connection);
@@ -41,4 +47,8 @@ export const getConnection = async () => {
   });
 };
 
+/**
+ * Query database
+ * @type {any}
+ */
 export const mysqlQuery = util.promisify(pool.query).bind(pool);
