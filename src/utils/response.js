@@ -5,7 +5,7 @@
 export const jsresponse = () => {
   return (req, res, next) => {
     res.jsend = {
-      success: (data, message = { info: 'Successful' }, statusCode = 200) => {
+      success: (data, message = { info: {} }, statusCode = 200) => {
         res.status(statusCode).send({
           status: 'success',
           message,

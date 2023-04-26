@@ -14,6 +14,7 @@ const {
   DB_USER,
   DB_PASSWORD,
   DB_NAME,
+  JWT_SECRET,
 } = process.env;
 
 export const envConfig = {
@@ -25,4 +26,5 @@ export const envConfig = {
   DB_USER: DB_USER,
   DB_PASSWORD: DB_PASSWORD,
   DB_NAME: DB_NAME,
+  JWT_SECRET_KEY: JWT_SECRET,
 };

@@ -11,7 +11,7 @@ class CoreServices {
   async getSomething() {
     try {
       const query = `SELECT *
-										 FROM data_devices`;
+										 FROM test.movies`;
       return await mysqlQuery({ sql: query });
     } catch (error) {
       throw error;
