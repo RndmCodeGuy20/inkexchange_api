@@ -15,4 +15,10 @@ export const schema = {
       address: Joi.string().required(),
     }),
   },
+  login: {
+    body: Joi.object({
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+    }),
+  },
 };

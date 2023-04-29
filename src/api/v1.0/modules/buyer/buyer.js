@@ -2,7 +2,12 @@ import { StatusCodes } from 'http-status-codes';
 import { ERROR_CODES } from '#constants/index';
 import { BuyerApiError } from './error';
 import { mysqlQuery } from '#helpers/index';
-import { generateHash, generateToken, generateRefreshToken } from '#utils/index';
+import {
+  generateHash,
+  generateToken,
+  generateRefreshToken,
+  compareHash,
+} from '#utils/index';
 
 /**
  * @class BuyerService
@@ -14,13 +19,13 @@ import { generateHash, generateToken, generateRefreshToken } from '#utils/index'
  */
 class BuyerService {
   /**
-	 *
+	 * @description - Registers a new buyer
 	 * @param {{email: string, password: string}} body
-	 * @return {Promise<void>}
+	 * @return {buyer_id: string, status: string} response
+	 * @throws {BuyerApiError}
 	 */
   async register(body) {
     try {
-      // body.email = verifyAndFormatMail(body.email);
       if (!body.email || !body.password) {
         throw new BuyerApiError(
             'Credentials are required',
@@ -28,15 +33,15 @@ class BuyerService {
             ERROR_CODES.INVALID,
         );
       }
-      const existingUserQuery = `SELECT *
-																 FROM data_buyers
-																 WHERE email_address = ?`;
-      const existingUserResponse = await mysqlQuery({
-        sql: existingUserQuery,
+      const existingBuyerQuery = `SELECT *
+																	FROM data_buyers
+																	WHERE email_address = ?`;
+      const existingBuyerResponse = await mysqlQuery({
+        sql: existingBuyerQuery,
         values: [body.email],
       });
 
-      if (existingUserResponse.length) {
+      if (existingBuyerResponse.length) {
         throw new BuyerApiError(
             'Buyer already exists',
             StatusCodes.CONFLICT,
@@ -57,10 +62,6 @@ class BuyerService {
         ],
       });
 
-      const buyer = {
-        email: body.email,
-        pass: body.password,
-      };
 
       if (!registerUserResponse.affectedRows) {
         throw new BuyerApiError(
@@ -79,20 +80,93 @@ class BuyerService {
       });
 
 
-      const response = {};
-
-      // console.log(buyerInfoResponse[0].buyer_id);
-
-
-      if (buyerInfoResponse) {
-        response.buyer_id = buyerInfoResponse[0].buyer_id;
-        response.access_token = generateToken({ buyer });
-        response.refresh_token = generateRefreshToken({ id: buyer.buyer_id });
+      if (!buyerInfoResponse.length) {
+        throw new BuyerApiError(
+            'Something went wrong',
+            StatusCodes.INTERNAL_SERVER_ERROR,
+            ERROR_CODES.INVALID,
+        );
       }
-      // console.log(buyer);
+
+      const buyer = {
+        buyer_id: buyerInfoResponse[0].buyer_id,
+        email_address: buyerInfoResponse[0].email_address,
+      };
+
+      const response = {
+        buyer_id: buyerInfoResponse[0].buyer_id,
+        status: buyerInfoResponse[0].status,
+        is_first_login: buyerInfoResponse[0].is_first_login,
+        access_token: generateToken({ buyer }),
+        refresh_token: generateRefreshToken({ id: buyerInfoResponse[0].buyer_id }),
+      };
+
       return response;
     } catch (err) {
       throw err;
+    }
+  }
+
+  /**
+	 * @description - Login buyer
+	 * @param {{email: string, password: string}} body
+	 * @return {Promise<{access_token: (*), refresh_token: (*), buyer_details: any, buyer_id: *}>}
+	 */
+  async login(body) {
+    try {
+      if (!body.email || !body.password) {
+        throw new BuyerApiError(
+            'Credentials are required',
+            StatusCodes.BAD_REQUEST,
+            ERROR_CODES.INVALID,
+        );
+      }
+
+      const existingBuyerQuery = `SELECT *
+																	FROM data_buyers
+																	WHERE email_address = ?`;
+      const existingBuyerResponse = await mysqlQuery({
+        sql: existingBuyerQuery,
+        values: [body.email],
+      });
+
+      if (!existingBuyerResponse.length) {
+        throw new BuyerApiError('Buyer does not exist', StatusCodes.NOT_FOUND, ERROR_CODES.NOT_ALLOWED);
+      }
+
+      const existingBuyer = existingBuyerResponse[0];
+      const isPasswordValid = compareHash(body.password, existingBuyer.password);
+
+      if (!isPasswordValid) {
+        throw new BuyerApiError('Password is invalid', StatusCodes.UNAUTHORIZED, ERROR_CODES.NOT_ALLOWED);
+      }
+
+      console.log(existingBuyer);
+
+      await mysqlQuery({
+        sql: `UPDATE data_buyers
+							SET is_first_login = 0
+							WHERE buyer_id = ?`,
+        values: [existingBuyer.buyer_id],
+      });
+
+      const buyer = {
+        email: existingBuyer.email_address,
+        first_name: existingBuyer.first_name,
+        last_name: existingBuyer.last_name,
+        phone_number: existingBuyer.phone_number,
+      };
+
+      const response = {
+        buyer_id: existingBuyer.buyer_id,
+        buyer_details: JSON.parse(JSON.stringify(buyer)),
+        access_token: generateToken({ buyer }),
+        refresh_token: generateRefreshToken({ id: existingBuyer.buyer_id }),
+      };
+
+      return response;
+    } catch (e) {
+      throw e;
     }
   }
 
@@ -103,8 +177,9 @@ class BuyerService {
 	 * @param {boolean} isFirstLogin
 	 * @return {Promise<void>}
 	 */
-  async updateBuyerById(reqData, { buyer_id: buyerId }, { is_first_login: isFirstLogin }) {
+  async updateBuyerById(reqData, { id: buyerId }, { is_first_login: isFirstLogin }) {
     try {
+      // console.log(reqData, buyerId, isFirstLogin);
       // check if buyer exists
       const buyerExistsQuery = `SELECT *
 																FROM data_buyers
@@ -122,22 +197,27 @@ class BuyerService {
         );
       }
 
-      // check if buyer has already updated his profile, if not then update
-      if (JSON.parse(isFirstLogin)) {
-        const updateBuyerQuery = `UPDATE data_buyers (first_name, last_name, phone_number, address, is_first_login)
-        																		VALUES (?, ?, ?, ?) WHERE buyer_id = ?`;
-        await mysqlQuery({
-          sql: updateBuyerQuery,
-          values: [
-            reqData.first_name,
-            reqData.last_name,
-            reqData.phone_number,
-            reqData.address,
-            true,
-            buyerId,
-          ],
-        });
-      }
+      console.log(typeof reqData, typeof buyerId, typeof isFirstLogin);
+
+      const updateBuyerQuery = `UPDATE data_buyers
+																SET ?
+																WHERE buyer_id = ?`;
+
+      await mysqlQuery({
+        sql: updateBuyerQuery,
+        values: [
+          {
+            first_name: reqData.first_name,
+            last_name: reqData.last_name,
+            phone_number: reqData.phone_number,
+            address: reqData.address,
+            is_first_login: isFirstLogin ? 1 : 0,
+          },
+          buyerId,
+        ],
+      });
+
+
       return;
     } catch (e) {
       throw e;

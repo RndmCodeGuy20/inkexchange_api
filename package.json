@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "cross-env-shell NODE_ENV=DEVELOPMENT nodemon --exec npx babel-node src/index.js",
 		"fix": "npx eslint --fix src",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "jest --watchAll --verbose"
 	},
 	"author": "RndmCodeGyu20",
 	"license": "ISC",

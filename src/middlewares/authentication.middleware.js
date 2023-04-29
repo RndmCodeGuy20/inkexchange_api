@@ -5,7 +5,7 @@ import { ERROR_CODES } from 'http-errors';
 /**
  * Authentication Middleware
  */
-class AuthenticationMiddlewareError extends Error	{
+class AuthenticationMiddlewareError extends Error {
   /**
 	 *
 	 * @param {string} message
@@ -20,7 +20,7 @@ class AuthenticationMiddlewareError extends Error	{
   }
 }
 
-export const validateUser = (req, res, next) =>{
+export const validateUser = (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
 
@@ -40,9 +40,9 @@ export const validateUser = (req, res, next) =>{
       );
     }
 
-    const token = authHeader.split('' )[1];
+    const token = authHeader.split(' ')[1];
     const tokenData = verifyToken(token);
-    res.locals.user= tokenData.data;
+    res.locals.user = tokenData.data;
 
     return next();
   } catch (error) {
