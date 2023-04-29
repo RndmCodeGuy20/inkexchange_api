@@ -141,7 +141,6 @@ class BuyerService {
         throw new BuyerApiError('Password is invalid', StatusCodes.UNAUTHORIZED, ERROR_CODES.NOT_ALLOWED);
       }
 
-      console.log(existingBuyer);
 
       await mysqlQuery({
         sql: `UPDATE data_buyers
@@ -179,7 +178,6 @@ class BuyerService {
 	 */
   async updateBuyerById(reqData, { id: buyerId }, { is_first_login: isFirstLogin }) {
     try {
-      // console.log(reqData, buyerId, isFirstLogin);
       // check if buyer exists
       const buyerExistsQuery = `SELECT *
 																FROM data_buyers
@@ -196,8 +194,6 @@ class BuyerService {
             ERROR_CODES.NOT_ALLOWED,
         );
       }
-
-      console.log(typeof reqData, typeof buyerId, typeof isFirstLogin);
 
       const updateBuyerQuery = `UPDATE data_buyers
 																SET ?
