@@ -1,6 +1,6 @@
 import { app } from './app';
 import { envConfig } from './config/index';
-import { getConnection } from '#helpers/database';
+import { getConnection } from '#helpers/index';
 import { logger } from '#helpers/logger';
 
 /**
