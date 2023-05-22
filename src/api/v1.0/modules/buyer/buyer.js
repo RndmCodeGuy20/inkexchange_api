@@ -19,9 +19,9 @@ import {
  */
 class BuyerService {
   /**
-	 * @description - Registers a new buyer
+	 * @description - Get buyer by id
 	 * @param {{email: string, password: string}} body
-	 * @return {buyer_id: string, status: string} response
+	 * @return {Promise<void>}
 	 * @throws {BuyerApiError}
 	 */
   async register(body) {
@@ -62,7 +62,6 @@ class BuyerService {
         ],
       });
 
-
       if (!registerUserResponse.affectedRows) {
         throw new BuyerApiError(
             'Something went wrong',
@@ -78,7 +77,6 @@ class BuyerService {
         sql: buyerInfoQuery,
         values: [body.email],
       });
-
 
       if (!buyerInfoResponse.length) {
         throw new BuyerApiError(
@@ -141,7 +139,6 @@ class BuyerService {
         throw new BuyerApiError('Password is invalid', StatusCodes.UNAUTHORIZED, ERROR_CODES.NOT_ALLOWED);
       }
 
-
       await mysqlQuery({
         sql: `UPDATE data_buyers
 							SET is_first_login = 0
@@ -171,12 +168,12 @@ class BuyerService {
 
   /**
 	 * @description - Update buyer profile by id
-	 * @param {{}} reqData
+	 * @param {{}} body
 	 * @param {string} buyerId
 	 * @param {boolean} isFirstLogin
 	 * @return {Promise<void>}
 	 */
-  async updateBuyerById(reqData, { id: buyerId }, { is_first_login: isFirstLogin }) {
+  async updateBuyerById(body, { id: buyerId }, { is_first_login: isFirstLogin }) {
     try {
       // check if buyer exists
       const buyerExistsQuery = `SELECT *
@@ -203,16 +200,15 @@ class BuyerService {
         sql: updateBuyerQuery,
         values: [
           {
-            first_name: reqData.first_name,
-            last_name: reqData.last_name,
-            phone_number: reqData.phone_number,
-            address: reqData.address,
+            first_name: body.first_name,
+            last_name: body.last_name,
+            phone_number: body.phone_number,
+            address: body.address,
             is_first_login: isFirstLogin ? 1 : 0,
           },
           buyerId,
         ],
       });
-
 
       return;
     } catch (e) {
