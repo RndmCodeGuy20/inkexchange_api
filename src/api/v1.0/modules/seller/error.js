@@ -1,15 +1,15 @@
 /**
- * Error class for Buyer API
- * @class BuyerApiError
+ * Error class for Seller API
+ * @class SellerApiError
  * @extends {Error}
  * @param {string} message - Error message
  * @param {number} httpStatus - HTTP status code
  * @param {number} errorCode - Error code
- * @return {BuyerApiError}
+ * @return {SellerApiError}
  */
-class BuyerApiError extends Error {
+class SellerApiError extends Error {
   /**
-	 * Creates an instance of BuyerApiError.
+	 * Creates an instance of SellerApiError.
 	 * @param {string} message - Error message
 	 * @param {number} httpStatus - HTTP status code
 	 * @param {number} errorCode - Error code
@@ -22,4 +22,4 @@ class BuyerApiError extends Error {
   }
 }
 
-export { BuyerApiError };
+export { SellerApiError };
