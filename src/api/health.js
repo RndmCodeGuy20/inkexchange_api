@@ -1,5 +1,5 @@
 import { pkgConfig } from '#configs/package.config';
-import { getConnection } from '#helpers/database';
+import { getConnection, getMongoConnection } from '#helpers/index';
 
 /**
  * Get health
@@ -11,6 +11,7 @@ import { getConnection } from '#helpers/database';
 export const getHealth = async (req, res, next) => {
   try {
     await getConnection();
+    await getMongoConnection();
     res.jsend.success({
       name: pkgConfig.APP_NAME,
       version: pkgConfig.APP_VERSION,

@@ -1,6 +1,6 @@
 import { app } from './app';
 import { envConfig } from './config/index';
-import { getConnection } from '#helpers/index';
+import { getConnection, getMongoConnection } from '#helpers/index';
 import { logger } from '#helpers/logger';
 
 /**
@@ -10,12 +10,40 @@ import { logger } from '#helpers/logger';
  */
 const init = async () => {
   await getConnection();
+  await getMongoConnection();
   app.listen(envConfig.APP_PORT, () => {
     logger.info(
         `Listening on ${envConfig.HOSTNAME} http://localhost:${envConfig.APP_PORT}`,
     );
   });
 };
+
+
+const exitHandler = () => {
+  if (app) {
+    app.close(() => {
+      logger.info('Server closed');
+      process.exit(1);
+    });
+  } else {
+    process.exit(1);
+  }
+};
+
+const unexpectedErrorHandler = (error) => {
+  logger.fatal(`Fatal error ${error.message}`);
+  exitHandler();
+};
+
+process.on('uncaughtException', unexpectedErrorHandler);
+process.on('unhandledRejection', unexpectedErrorHandler);
+
+process.on('SIGTERM', () => {
+  logger.info('SIGTERM received');
+  if (app) {
+    app.close();
+  }
+});
 
 /**
  * @description - start the server, handles promise rejections

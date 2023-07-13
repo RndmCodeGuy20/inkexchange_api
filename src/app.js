@@ -15,6 +15,7 @@ const corsOptions = {
   exposedHeaders: ['Authorization'],
 };
 
+
 const app = express();
 
 app.use(helmet());
@@ -27,6 +28,7 @@ app.use(expressLogger);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, '.data')));
 app.use(express.static(path.join(__dirname, 'logs')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api', apiRoutes);
 app.get('/', (req, res) => {

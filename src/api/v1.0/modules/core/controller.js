@@ -6,4 +6,8 @@ export const controller = {
     const response = await coreServices.getSomething();
     res.jsend.success(response);
   }),
+  getSomethingMongo: catchAsync(async (req, res) => {
+    const response = await coreServices.getSomethingMongo();
+    res.jsend.success(response);
+  }),
 };

@@ -12,7 +12,7 @@ class SellerApiError extends Error {
 	 * Creates an instance of SellerApiError.
 	 * @param {string} message - Error message
 	 * @param {number} httpStatus - HTTP status code
-	 * @param {number} errorCode - Error code
+	 * @param {string} errorCode - Error code
 	 */
   constructor(message, httpStatus, errorCode) {
     super(message);
