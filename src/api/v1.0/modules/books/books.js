@@ -8,9 +8,20 @@ import { Book } from './model';
  */
 class BookServices {
   /**
-	 * @description Create a book
+	 * @description Create a new book
 	 * @param {{
+	 * name: string,
+	 * author: string,
+	 * description: string,
+	 * genre: string,
+	 * pages: number,
+	 * current_price: number,
+	 * original_price: number,
+	 * previous_price: number,
+	 * condition: string,
+	 * status: string,
 	 * }} body
+	 *
 	 * @param {[
 	 *   fieldname: string,
 	 *   originalname: string,
@@ -20,6 +31,7 @@ class BookServices {
 	 *   filename: string,
 	 *   path: [string],
 	 * ]} files
+	 *
 	 * @param {string} sellerId
 	 * @return {Promise<*>}
 	 */
