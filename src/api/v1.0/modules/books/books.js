@@ -42,7 +42,7 @@ class BookServices {
       const images = [];
 
       for (const file of files) {
-        images.push(`/image/${file.path}`);
+        images.push(`/images/${file.path}`);
       }
 
       const addBookQuery = await Book.create({
