@@ -1,17 +1,18 @@
 import mongoose from 'mongoose';
 
 const bookSchema = new mongoose.Schema({
-  title: String,
+  name: String,
   description: String,
   author: String,
   seller_id: String,
   genre: String,
-  images: Array,
+  pages: Number,
   current_price: Number,
   original_price: Number,
   previous_price: Number,
   condition: String,
   status: String,
+  images: Array,
   created_at: Date,
   updated_at: Date,
 });

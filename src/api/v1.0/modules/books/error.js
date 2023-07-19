@@ -16,3 +16,5 @@ class BooksApiError extends Error {
     this.error = error;
   }
 }
+
+export { BooksApiError };

@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
-import { logger } from '#helpers/logger';
-import { envConfig } from '../config/index';
+import { logger } from '#helpers/index';
+import { envConfig } from '#configs/index';
 
 export const getMongoConnection = async () => {
   try {
     // eslint-disable-next-line max-len
-    const mongoUrl = `mongodb+srv://${envConfig.MONGO_DB_USERNAME}:${envConfig.MONGO_DB_PASSWORD}@clusterinkexchange.9jinoat.mongodb.net/?retryWrites=true&w=majority`;
+    const mongoUrl = `mongodb+srv://${envConfig.MONGO_DB_USERNAME}:${envConfig.MONGO_DB_PASSWORD}@clusterinkexchange.9jinoat.mongodb.net/inkExchangeDB?retryWrites=true&w=majority`;
     await mongoose.connect(mongoUrl, {
       useNewUrlParser: true,
       useUnifiedTopology: true,

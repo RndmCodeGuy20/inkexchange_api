@@ -6,7 +6,7 @@ import path from 'path';
 import apiRoutes from './api';
 import { jsresponse } from '#utils/index';
 import { envConfig } from '#configs/env.config';
-import { expressLogger } from '#helpers/logger';
+import { expressLogger } from '#helpers/index';
 
 const corsOptions = {
   origin: '*',
@@ -14,7 +14,6 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],
   exposedHeaders: ['Authorization'],
 };
-
 
 const app = express();
 
@@ -26,17 +25,19 @@ app.use(express.urlencoded({ extended: false, limit: '50MB' }));
 app.use(cookieParser());
 app.use(expressLogger);
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, '.data')));
+app.use('/images', express.static(path.join('.data')));
 app.use(express.static(path.join(__dirname, 'logs')));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+console.log(path.join(__dirname, 'public'));
 
 app.use('/api', apiRoutes);
 app.get('/', (req, res) => {
   res.json({
     status: 'active',
-    info: 'library backend api server. Please visit health route for more information.',
+    info: 'ink exchange backend api server. Please visit health route for more information.',
     hostname: envConfig.HOSTNAME,
   });
 });
+
 
 export { app };

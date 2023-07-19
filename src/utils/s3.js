@@ -1,56 +1,35 @@
-import AWS from 'aws-sdk';
+import S3 from 'aws-sdk/clients/s3';
 import { envConfig } from '#configs/index';
 import { logger } from '#helpers/index';
+import * as fs from 'fs';
 
-const s3 = new AWS.S3({
+const s3 = new S3({
   accessKeyId: envConfig.AWS_ACCESS_KEY_ID,
   secretAccessKey: envConfig.AWS_SECRET_ACCESS_KEY,
   region: envConfig.AWS_REGION,
 });
 
-export const uploadFile = async (file, filename, fileType, folder) => {
+export const uploadFile = (file, fileName, fileType, directory) => {
   return new Promise((resolve, reject) => {
     try {
+      const fileStream = fs.createReadStream(file.path);
       const params = {
-        Bucket: `${envConfig.AWS_BUCKET_NAME}/${folder}`,
-        Key: `${folder}/${filename}`,
-        Body: file.read,
+        Bucket: `${envConfig.AWS_BUCKET_NAME}/${directory}`,
+        Key: fileName,
         ContentType: fileType,
-        ACL: 'public-read',
+        Body: fileStream,
       };
       s3.upload(params, (err, data) => {
         if (err) {
           logger.error(err);
-          reject(err);
+          reject(new Error('Error uploading file. Please try again.'));
         }
+        data.fileName = fileName;
         resolve(data);
       });
     } catch (error) {
       logger.error(error);
-      reject(new Error(`Something went wrong while uploading file, ${error.message}`));
-    }
-  });
-};
-
-export const getSignedUrl = async (filename, folder) => {
-  return new Promise((resolve, reject) => {
-    try {
-      const params = {
-        Bucket: `${envConfig.AWS_BUCKET_NAME}/${folder}`,
-        Key: `${folder}/${filename}`,
-        Expires: 60 * 60 * 24 * 7,
-      };
-
-      s3.getSignedUrl('getObject', params, (err, url) => {
-        if (err) {
-          logger.error(err);
-          reject(err);
-        }
-        resolve(url);
-      });
-    } catch (error) {
-      logger.error(error);
-      reject(new Error(`Something went wrong while getting signed url, ${error.message}`));
+      reject(new Error(`Something went wrong while uploading file. Please try again.${error.message}`));
     }
   });
 };

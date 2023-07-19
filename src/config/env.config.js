@@ -22,6 +22,7 @@ const {
   AWS_SECRET_ACCESS_KEY,
   AWS_REGION,
   AWS_BUCKET_NAME,
+  AWS_SDK_LOAD_CONFIG,
 } = process.env;
 
 export const envConfig = {
@@ -41,4 +42,5 @@ export const envConfig = {
   AWS_SECRET_ACCESS_KEY: AWS_SECRET_ACCESS_KEY,
   AWS_REGION: AWS_REGION,
   AWS_BUCKET_NAME: AWS_BUCKET_NAME,
+  AWS_SDK_LOAD_CONFIG: AWS_SDK_LOAD_CONFIG,
 };

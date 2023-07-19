@@ -22,7 +22,7 @@ class SellerServices {
 	 * @param {{email: string, password: string}}body
 	 * @return {Promise<{
 	 * seller: {email_address: *, seller_id: *},
-	 * is_first_login: number,
+	 * is_first_login: boolean,
 	 * refresh_token: (*),
 	 * token: (*)
 	 * }>}
@@ -99,6 +99,15 @@ class SellerServices {
     }
   }
 
+  /**
+	 *
+	 * @param {{}} body
+	 * @param {boolean} isFirstLogin
+	 * @param {string} sellerId
+	 * @return {Promise<{
+	 *   affectedRows: number
+	 * }>}
+	 */
   async updateSellerById(body, { is_first_login: isFirstLogin }, { id: sellerId }) {
     try {
       const getExistingSellerQuery = `SELECT *

@@ -40,7 +40,8 @@
 		"pino": "^8.11.0",
 		"pino-pretty": "^10.0.0",
 		"timekeeper": "^2.2.0",
-		"util": "^0.12.5"
+		"util": "^0.12.5",
+		"uuid": "^9.0.0"
 	},
 	"imports": {
 		"#configs/*": "./src/config/*.js",
