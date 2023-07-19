@@ -9,7 +9,8 @@ import { Book } from './model';
 class BookServices {
   /**
 	 * @description Create a book
-	 * @param {{}} body
+	 * @param {{
+	 * }} body
 	 * @param {[
 	 *   fieldname: string,
 	 *   originalname: string,
@@ -19,7 +20,7 @@ class BookServices {
 	 *   filename: string,
 	 *   path: [string],
 	 * ]} files
-	 * @param {string}sellerId
+	 * @param {string} sellerId
 	 * @return {Promise<*>}
 	 */
   async createBook(body, files, { id: sellerId }) {
@@ -41,7 +42,7 @@ class BookServices {
       const images = [];
 
       for (const file of files) {
-        images.push(file.path);
+        images.push(`/image/${file.path}`);
       }
 
       const addBookQuery = await Book.create({
@@ -73,6 +74,92 @@ class BookServices {
     }
   }
 
+  /**
+	 * @description Get all books
+	 * @param {{
+	 *  search: string,
+	 *  page: string,
+	 *  items_per_page: string,
+	 *  sort_by: string,
+	 *  sort_order: string,
+	 * }} query
+	 * @return {Promise<*>}
+	 */
+  async getBooks(query) {
+    try {
+      const page = parseInt(query.page) || 1;
+      const itemsPerPage = parseInt(query.items_per_page) || 10;
+      const sortBy = query.sort_by || 'current_price';
+      const sortOrder = query.sort_order === 'asc' ? 1 : -1;
+      const skip = (page - 1) * itemsPerPage;
+      const search = query.search || '';
+
+
+      const booksQuery = await Book.find({
+        '$or': [
+          {
+            name: new RegExp(search, 'i'),
+          },
+          {
+            author: new RegExp(search, 'i'),
+          },
+          {
+            genre: new RegExp(search, 'i'),
+          },
+        ],
+      },
+      {
+        name: 1,
+        author: 1,
+        genre: 1,
+        description: 1,
+        images: 1,
+        current_price: 1,
+        original_price: 1,
+      })
+          .sort({ sortBy: sortOrder })
+          .skip(0)
+          .limit(10)
+          .exec();
+
+      console.log(booksQuery);
+
+      const booksCountQuery = await Book.countDocuments({}).exec();
+
+      const response = {};
+      if (page * itemsPerPage < booksCountQuery) {
+        response.next = {
+          page: page + 1,
+          items_per_page: itemsPerPage,
+        };
+      }
+
+      if (skip > 0) {
+        response.previous = {
+          page: page - 1,
+          items_per_page: itemsPerPage,
+        };
+      }
+
+      response.data = {
+        books: booksQuery,
+        total_count: booksCountQuery,
+        page: page,
+        items_per_page: itemsPerPage,
+      };
+
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  /**
+	 *
+	 * @param {string} sellerId
+	 * @param {[string]} files
+	 * @return {Promise<*[]>}
+	 */
   async uploadImages({ id: sellerId }, files) {
     try {
       const images = [];

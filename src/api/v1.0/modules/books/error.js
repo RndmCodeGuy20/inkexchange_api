@@ -7,7 +7,7 @@ class BooksApiError extends Error {
   /**
 	 * @description Creates an instance of BooksApiError.
 	 * @param {string} message
-	 * @param {number} code
+	 * @param {string} code
 	 * @param {string} error
 	 */
   constructor(message, code, error) {
