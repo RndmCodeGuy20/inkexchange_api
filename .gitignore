@@ -6,7 +6,7 @@ node_modules/
 # exclude all files in the IDE folder
 .idea/
 .vscode/
-
+.env.local
 
 # exclude db files
 db/

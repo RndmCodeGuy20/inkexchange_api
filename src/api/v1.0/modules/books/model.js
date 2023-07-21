@@ -22,7 +22,7 @@ const bookSchema = new mongoose.Schema({
   condition: String,
   status: {
     type: String,
-    enum: ['available', 'sold', 'deleted'],
+    enum: ['available', 'sold', 'deleted', 'rented'],
     default: 'available',
   },
   images: Array,

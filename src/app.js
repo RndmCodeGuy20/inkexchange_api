@@ -28,8 +28,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/images', express.static(path.join('.data')));
 app.use(express.static(path.join(__dirname, 'logs')));
 
-console.log(path.join(__dirname, 'public'));
-
 app.use('/api', apiRoutes);
 app.get('/', (req, res) => {
   res.json({

@@ -8,6 +8,10 @@ const bookData = {
   sellerId: '',
 };
 
+/**
+ * @class UploadMiddlewareError
+ * @extends Error
+ */
 class UploadMiddlewareError extends Error {
   /**
 	 * @param {string} message
@@ -23,16 +27,32 @@ class UploadMiddlewareError extends Error {
 }
 
 const storage = multer.diskStorage({
+  /**
+	 *
+	 * @param {{
+	 *   body: {
+	 *   name: string,
+	 *   author: string,
+	 *   description: string
+	 *   },
+	 *   params: {
+	 *   sellerid: string
+	 *   }
+	 * }} req
+	 * @param file
+	 * @param callback
+	 */
   destination(req, file, callback) {
     try {
       bookData.bookName = req.body.name;
-      bookData.sellerId = req.params.id;
-      console.log(bookData);
+      bookData.sellerId = req.params.sellerid;
 
       try {
         fs.mkdirSync(join('.data', bookData.sellerId, 'books', bookData.bookName), { recursive: true });
       } catch (err) {
-        if (err.code !== 'EEXIST') throw new UploadMiddlewareError('Directory could not be created', 500, 'UPLOAD_ERROR');
+        if (err.code !== 'EEXIST') {
+          throw new UploadMiddlewareError('Directory could not be created', 500, 'UPLOAD_ERROR');
+        }
       }
 
       switch (file.fieldname) {
